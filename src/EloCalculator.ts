@@ -1,0 +1,133 @@
+import { RelativeRank } from './types/RelativeRank'
+import { ScoringBonus } from './enums/ScoringBonus'
+
+/**
+ * https://metinmediamath.wordpress.com/2013/11/27/how-to-calculate-the-elo-rating-including-example/
+ *
+ * EloCalculator class to do calculations to determine the elo of a player after a match
+ */
+class EloCalculator {
+  private kFactor: number = 32
+  private shouldRound: boolean
+
+  /**
+   * Constructor method for the EloCalculator class
+   *
+   * @param {boolean} shouldRound Whether or not the new ELO should be rounded before being returned
+   */
+  constructor (shouldRound: boolean = false) {
+    this.shouldRound = shouldRound
+  }
+
+  /**
+   * @private
+   *
+   * Takes a current ELO score and will convert it to it's equivalent base10 value which can be used
+   * to determine ELO for a win, loss or draw.
+   *
+   * @param {number} elo An ELO score to be converted to base10.
+   * @return {Promise<number>} The equivalent base10 rank of the given ELO.
+   */
+  private convertEloToBase10 (elo: number): Promise<number> {
+    const divide = () => elo / 400
+    const convertToBase10 = (value: number) => Math.pow(10, value)
+
+    return Promise.resolve()
+      .then(divide)
+      .then(convertToBase10)
+  }
+
+  /**
+   * @private
+   *
+   * Calculates the base10 equivalent value of each player's ELO score which can then be used to determine the new ELO
+   * score for the player.
+   *
+   * @param {number} playerElo The initial ELO of the player.
+   * @param {number} opponentElo The initial ELO of the opponent.
+   * @return {Promise<RelativeRank>} An object containing the equivalent base10 value of both player's ELO score.
+   */
+  private determineRelativeRank (playerElo: number, opponentElo: number): Promise<RelativeRank> {
+    return Promise.all([
+      this.convertEloToBase10(playerElo),
+      this.convertEloToBase10(opponentElo)
+    ]).then(([player, opponent]: [number, number]) => ({ player, opponent }))
+  }
+
+  /**
+   * @private
+   *
+   * Determines the scoring factor of the player based on their rank against their opponents rank.
+   *
+   * @param {number} playerRank The base10 value of the player's ELO score.
+   * @param {number} opponentRank The base10 value of the opponent's ELO score.
+   * @return {Promise<number>} The determined scoring factor.
+   */
+  private determineScoreFactor (playerRank: number, opponentRank: number): Promise<number> {
+    const add = () => playerRank + opponentRank
+    const divide = (value: number) => playerRank / value
+
+    return Promise.resolve()
+      .then(add)
+      .then(divide)
+  }
+
+  /**
+   * @private
+   *
+   * Determines the new ELO of a player based on the score factor, a win or loss and current ELO score.
+   *
+   * @param {number} playerElo A player's current ELO score.
+   * @param {number} scoringFactor A factor derived from the player's relative base10 ELO score with their opponent's .
+   * @param {ScoringBonus} score Enum with [ WIN, LOSS, DRAW ].
+   * @return {Promise<number>} The new calculated ELO.
+   */
+  private determineElo (playerElo: number, scoringFactor: number, score: ScoringBonus): Promise<number> {
+    const subtract = () => score - scoringFactor
+
+    const add = (value: number) => playerElo + value
+    const multiply = (value: number) => value * this.kFactor
+
+    return Promise.resolve()
+      .then(subtract)
+      .then(multiply)
+      .then(add)
+  }
+
+  /**
+   * @private
+   *
+   * Rounds off the ELO score before it is returned
+   *
+   * @param {number} elo A value representing the ELO
+   * @return {Promise<number>}
+   */
+  private rounding (elo: number): Promise<number> {
+    return Promise.resolve()
+      .then(() => {
+        if (this.shouldRound) {
+          return Math.round(elo)
+        }
+
+        return elo
+      })
+  }
+
+  /**
+   * Calculate the ELO of a player after a match based on their opponent's ELO and whether or not the player won the game.
+   *
+   * @param {number} playerElo The ELO of the player.
+   * @param {number} opponentElo The ELO of the opponent.
+   * @param {ScoringBonus} score The outcome of the game for the player, enum with [ WIN, LOSS, DRAW ].
+   * @return {Promise<number>} The new ELO of the player.
+   */
+  public calculateElo (playerElo: number, opponentElo: number, score: ScoringBonus): Promise<number> {
+    return Promise.resolve()
+      .then(() => this.determineRelativeRank(playerElo, opponentElo))
+      .then((relativeRank: RelativeRank) => this.determineScoreFactor(relativeRank.player, relativeRank.opponent))
+      .then((scoringFactor: number) => this.determineElo(playerElo, scoringFactor, score))
+      .then((elo: number) => this.rounding(elo))
+  }
+}
+
+export { EloCalculator }
