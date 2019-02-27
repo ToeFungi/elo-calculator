@@ -1,5 +1,4 @@
-import { EloCalculator } from '../../src/EloCalculator'
-import { ScoringBonus } from '../../src/enums/ScoringBonus'
+import { EloCalculator, ScoringBonus } from '../../src'
 
 describe('EloCalculator', () => {
   let eloCalculator: EloCalculator

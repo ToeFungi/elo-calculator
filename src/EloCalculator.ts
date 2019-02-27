@@ -15,7 +15,7 @@ class EloCalculator {
    *
    * @param {boolean} shouldRound Whether or not the new ELO should be rounded before being returned
    */
-  constructor (shouldRound: boolean = false) {
+  constructor (shouldRound: boolean = true) {
     this.shouldRound = shouldRound
   }
 
