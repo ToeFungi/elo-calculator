@@ -1,4 +1,4 @@
-import { EloCalculator, ScoringBonus } from '../../src'
+import { EloCalculator, Probabilities, ScoringBonus } from '../../src'
 
 describe('EloCalculator', () => {
   let eloCalculator: EloCalculator
@@ -58,6 +58,40 @@ describe('EloCalculator', () => {
 
       return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
         .should.become(expectedElo)
+    })
+  })
+
+  describe('#caluclateWinProbability', () => {
+    it('returns a 50 / 50 probability of winning', () => {
+      const expectedProbability: Probabilities = {
+        player: 50,
+        opponent: 50
+      }
+
+      return eloCalculator.caluclateWinProbability(playerElo, opponentElo)
+        .should.become(expectedProbability)
+    })
+
+    it('returns a high probability when the player has a higher ELO than the opponent', () => {
+      const playerElo: number = 2364
+      const expectedProbability: Probabilities = {
+        player: 89,
+        opponent: 11
+      }
+
+      return eloCalculator.caluclateWinProbability(playerElo, opponentElo)
+        .should.become(expectedProbability)
+    })
+
+    it('returns a low probability when the player has a lower ELO than the opponent', () => {
+      const playerElo: number = 1800
+      const expectedProbability: Probabilities = {
+        player: 24,
+        opponent: 76
+      }
+
+      return eloCalculator.caluclateWinProbability(playerElo, opponentElo)
+        .should.become(expectedProbability)
     })
   })
 })

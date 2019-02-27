@@ -1,5 +1,6 @@
 import { RelativeRank } from './types/RelativeRank'
 import { ScoringBonus } from './enums/ScoringBonus'
+import { Probabilities } from './types/Probabilities'
 
 /**
  * https://metinmediamath.wordpress.com/2013/11/27/how-to-calculate-the-elo-rating-including-example/
@@ -127,6 +128,33 @@ class EloCalculator {
       .then((relativeRank: RelativeRank) => this.determineScoreFactor(relativeRank.player, relativeRank.opponent))
       .then((scoringFactor: number) => this.determineElo(playerElo, scoringFactor, score))
       .then((elo: number) => this.rounding(elo))
+  }
+
+  /**
+   * Calculate the win probability for players in a match up given their respective ELO's.
+   *
+   * @param {number} playerElo The ELO of the player.
+   * @param {number} opponentElo The ELO of the opponent.
+   * @return {Promise<Probabilities>} The win probability for each player respectively.
+   */
+  public caluclateWinProbability (playerElo: number, opponentElo: number): Promise<Probabilities> {
+    const determineDiff = () => opponentElo - playerElo
+    const determineProbability = (elo: number) => 1 / (1 + elo)
+    const createObject = (probability: number): Probabilities => {
+      const opponent = Math.round((1 - probability) * 100)
+      const player = Math.round(probability * 100)
+
+      return {
+        player,
+        opponent
+      }
+    }
+
+    return Promise.resolve()
+      .then(determineDiff)
+      .then(this.convertEloToBase10)
+      .then(determineProbability)
+      .then(createObject)
   }
 }
 
