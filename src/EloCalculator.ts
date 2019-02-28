@@ -5,18 +5,20 @@ import { Probabilities } from './types/Probabilities'
 /**
  * https://metinmediamath.wordpress.com/2013/11/27/how-to-calculate-the-elo-rating-including-example/
  *
- * EloCalculator class to do calculations to determine the elo of a player after a match
+ * EloCalculator class to do calculations to determine the elo of a player after a match.
  */
 class EloCalculator {
   private kFactor: number = 32
   private shouldRound: boolean
 
   /**
-   * Constructor method for the EloCalculator class
+   * Constructor method for the EloCalculator class.
    *
-   * @param {boolean} shouldRound Whether or not the new ELO should be rounded before being returned
+   * @param {boolean} shouldRound Whether or not the new ELO should be rounded before being returned.
+   * @param {number} kFactor The factor the new ELO is calculated against.
    */
-  constructor (shouldRound: boolean = true) {
+  constructor (shouldRound: boolean = true, kFactor: number = 32) {
+    this.kFactor = 32
     this.shouldRound = shouldRound
   }
 
@@ -81,13 +83,22 @@ class EloCalculator {
    * @param {number} playerElo A player's current ELO score.
    * @param {number} scoringFactor A factor derived from the player's relative base10 ELO score with their opponent's .
    * @param {ScoringBonus} score Enum with [ WIN, LOSS, DRAW ].
+   * @param {number} scoreDiff The difference in the score as a number.
    * @return {Promise<number>} The new calculated ELO.
    */
-  private determineElo (playerElo: number, scoringFactor: number, score: ScoringBonus): Promise<number> {
+  private determineElo (playerElo: number, scoringFactor: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
+    const getFactor = (scoreDiff?: number): number => {
+      if (!scoreDiff) {
+        return this.kFactor
+      }
+
+      return Math.log(Math.abs(scoreDiff) + 1) * this.kFactor
+    }
+
     const subtract = () => score - scoringFactor
 
     const add = (value: number) => playerElo + value
-    const multiply = (value: number) => value * this.kFactor
+    const multiply = (value: number) => value * getFactor(scoreDiff)
 
     return Promise.resolve()
       .then(subtract)
@@ -98,21 +109,43 @@ class EloCalculator {
   /**
    * @private
    *
-   * Rounds off the ELO score before it is returned
+   * Rounds off the ELO score before it is returned.
    *
-   * @param {number} elo A value representing the ELO
-   * @return {Promise<number>}
+   * @param {number} elo A value representing the ELO.
+   * @return {Promise<number>} The rounded off ELO value.
    */
   private rounding (elo: number): Promise<number> {
     return Promise.resolve()
       .then(() => {
-        if (this.shouldRound) {
-          return Math.round(elo)
+        if (!this.shouldRound) {
+          return elo
         }
 
-        return elo
+        return Math.round(elo)
       })
   }
+
+  /**
+   * @private
+   *
+   * Creates a probability object which will be returned to the user.
+   *
+   * @param {number} probability The probability of the `player` to win the game.
+   * @return {Promise<Probabilities>} The probability of a win for either player based on the `player` ELO.
+   */
+  private createProbability (probability: number): Promise<Probabilities> {
+    return Promise.resolve()
+      .then(() => {
+        const player = Math.round(probability * 100)
+        const opponent = Math.round((1 - probability) * 100)
+
+        return {
+          player,
+          opponent
+        }
+      })
+  }
+
 
   /**
    * Calculate the ELO of a player after a match based on their opponent's ELO and whether or not the player won the game.
@@ -120,13 +153,14 @@ class EloCalculator {
    * @param {number} playerElo The ELO of the player.
    * @param {number} opponentElo The ELO of the opponent.
    * @param {ScoringBonus} score The outcome of the game for the player, enum with [ WIN, LOSS, DRAW ].
+   * @param {number} scoreDiff The difference in the score as a number.
    * @return {Promise<number>} The new ELO of the player.
    */
-  public calculateElo (playerElo: number, opponentElo: number, score: ScoringBonus): Promise<number> {
+  public calculateElo (playerElo: number, opponentElo: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
     return Promise.resolve()
       .then(() => this.determineRelativeRank(playerElo, opponentElo))
       .then((relativeRank: RelativeRank) => this.determineScoreFactor(relativeRank.player, relativeRank.opponent))
-      .then((scoringFactor: number) => this.determineElo(playerElo, scoringFactor, score))
+      .then((scoringFactor: number) => this.determineElo(playerElo, scoringFactor, score, scoreDiff))
       .then((elo: number) => this.rounding(elo))
   }
 
@@ -138,23 +172,15 @@ class EloCalculator {
    * @return {Promise<Probabilities>} The win probability for each player respectively.
    */
   public caluclateWinProbability (playerElo: number, opponentElo: number): Promise<Probabilities> {
-    const determineDiff = () => opponentElo - playerElo
-    const determineProbability = (elo: number) => 1 / (1 + elo)
-    const createObject = (probability: number): Probabilities => {
-      const opponent = Math.round((1 - probability) * 100)
-      const player = Math.round(probability * 100)
+    const determineDiff = (): number => opponentElo - playerElo
 
-      return {
-        player,
-        opponent
-      }
-    }
+    const determineProbability = (elo: number): number => 1 / (1 + elo)
 
     return Promise.resolve()
       .then(determineDiff)
       .then(this.convertEloToBase10)
       .then(determineProbability)
-      .then(createObject)
+      .then(this.createProbability)
   }
 }
 

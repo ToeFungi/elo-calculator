@@ -12,41 +12,61 @@ describe('EloCalculator', () => {
   })
 
   describe('#calculateElo', () => {
-    it('returns a specific ELO which is higher after a win', () => {
-      const expectedElo: number = 2016
+    describe('win', () => {
+      it('returns a specific ELO which is higher after a win', () => {
+        const expectedElo: number = 2016
 
-      return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN)
-        .should.become(expectedElo)
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN)
+          .should.become(expectedElo)
+      })
+
+      it('returns a specific ELO which is higher after a win and takes into account score difference', () => {
+        const expectedElo: number = 2026
+
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN, 4)
+          .should.become(expectedElo)
+      })
     })
 
-    it('returns a specific ELO which is lower after a loss', () => {
-      const expectedElo: number = 1984
+    describe('draw', () => {
+      it('returns a higher ELO when the opponent has a higher ELO and the game was a draw', () => {
+        const opponentElo: number = 2400
+        const expectedElo: number = 2013
 
-      return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.LOSS)
-        .should.become(expectedElo)
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
+          .should.become(expectedElo)
+      })
+
+      it('returns the same ELO when both players have equal ELO and the game was a draw', () => {
+        const expectedElo: number = 2000
+
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
+          .should.become(expectedElo)
+      })
+
+      it('returns a lower ELO when the opponent has a lower ELO and the game was a draw', () => {
+        const playerElo: number = 2400
+        const expectedElo: number = 2387
+
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
+          .should.become(expectedElo)
+      })
     })
 
-    it('returns the same ELO when both players have equal ELO and the game was a draw', () => {
-      const expectedElo: number = 2000
+    describe('loss', () => {
+      it('returns a specific ELO which is lower after a loss', () => {
+        const expectedElo: number = 1984
 
-      return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
-        .should.become(expectedElo)
-    })
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.LOSS)
+          .should.become(expectedElo)
+      })
 
-    it('returns a higher ELO when the opponent has a higher ELO and the game was a draw', () => {
-      const opponentElo: number = 2400
-      const expectedElo: number = 2013
+      it('returns a specific ELO which is lower after a loss and takes into account score difference', () => {
+        const expectedElo: number = 1969
 
-      return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
-        .should.become(expectedElo)
-    })
-
-    it('returns a lower ELO when the opponent has a lower ELO and the game was a draw', () => {
-      const playerElo: number = 2400
-      const expectedElo: number = 2387
-
-      return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.DRAW)
-        .should.become(expectedElo)
+        return eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.LOSS, 6)
+          .should.become(expectedElo)
+      })
     })
 
     it('returns an ELO that is not rounded', () => {
