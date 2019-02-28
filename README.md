@@ -13,21 +13,33 @@ To install this package.
 ### Usage
 You're first going to want to import the relevant files and instantiate a new instance of the `EloCalculator`.
 ```typescript
-import { EloCalculator } from '/'
+import { EloCalculator } from '..'
 
 const eloCalculator: EloCalculator = new EloCalculator()
 ```
 
 Here is a basic example of calculating a new ELO value.
 ```typescript
-import { ScoringBonus } from '/'
+import { ScoringBonus } from '..'
 
 // Declared player variables
 const playerElo = 2149
 const opponentElo = 2084
 
-// Calculate ELO based on the outcome of the game
+// Calculate ELO based on the outcome of the game without taking into account 
+// Player performance or the score difference in the game
 eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN)
+  .then((elo: number) => {
+    console.log(elo) // The new ELO
+  })
+  
+// Take into account the numerical difference in the score to determine the ELO
+// This will make the ELO change more dynamic as it computes slightly differently
+// And will more accurately split the higher players from the lower players
+// In terms of their ELO
+const scoreDiff = 4
+
+eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN, scoreDiff)
   .then((elo: number) => {
     console.log(elo) // The new ELO
   })
@@ -35,7 +47,7 @@ eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN)
 
 Here is a basic example of calculating win probabilities between two players.
 ```typescript
-import { Probabilities } from '/'
+import { Probabilities } from '..'
 
 // Declared player variables
 const playerElo = 2149
