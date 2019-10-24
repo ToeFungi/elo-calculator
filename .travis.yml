@@ -6,7 +6,7 @@ node_js:
 addons:
   sonarcloud:
     token:
-      secure: "a9d62f889c262b5909478eeb0a596b30585d57fa"
+      secure: "e3ff1cd238877b716ea8e51b4135a4b9e5d6750e"
 
 install:
   - npm i
