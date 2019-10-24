@@ -1,0 +1,9 @@
+{
+  "check-coverage": true,
+  "include": [
+    "src/**/*"
+  ],
+  "extension": [
+    ".ts"
+  ]
+}
