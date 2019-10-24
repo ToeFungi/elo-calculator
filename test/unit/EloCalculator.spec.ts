@@ -16,7 +16,6 @@ describe('EloCalculator', () => {
       const shouldRound = true
       const eloCalculator = new EloCalculator(shouldRound)
 
-      eloCalculator.kFactor.should.deep.equal(32)
       return eloCalculator.shouldRound.should.be.true
     })
 
@@ -24,13 +23,19 @@ describe('EloCalculator', () => {
       const shouldRound = false
       const eloCalculator = new EloCalculator(shouldRound)
 
-      eloCalculator.kFactor.should.deep.equal(32)
       return eloCalculator.shouldRound.should.be.false
     })
 
     it('sets the `kFactor` option correctly', () => {
       const kFactor = 10
       const eloCalculator = new EloCalculator(true, kFactor)
+
+      return eloCalculator.kFactor.should.deep.equal(kFactor)
+    })
+
+    it('sets the `kFactor` to the default correctly', () => {
+      const kFactor = 32
+      const eloCalculator = new EloCalculator(true)
 
       return eloCalculator.kFactor.should.deep.equal(kFactor)
     })
