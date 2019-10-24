@@ -8,8 +8,8 @@ import { Probabilities } from './types/Probabilities'
  * EloCalculator class to do calculations to determine the elo of a player after a match.
  */
 class EloCalculator {
-  private kFactor: number = 32
-  private shouldRound: boolean
+  public readonly kFactor: number = 32
+  public readonly shouldRound: boolean
 
   /**
    * Constructor method for the EloCalculator class.
@@ -18,7 +18,7 @@ class EloCalculator {
    * @param {number} kFactor The factor the new ELO is calculated against.
    */
   constructor(shouldRound: boolean = true, kFactor: number = 32) {
-    this.kFactor = 32
+    this.kFactor = kFactor
     this.shouldRound = shouldRound
   }
 
@@ -87,12 +87,12 @@ class EloCalculator {
    * @return {Promise<number>} The new calculated ELO.
    */
   private determineElo(playerElo: number, scoringFactor: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
-    const getFactor = (scoreDiff?: number): number => {
-      if (!scoreDiff) {
+    const getFactor = (difference?: number): number => {
+      if (!difference) {
         return this.kFactor
       }
 
-      return Math.log(Math.abs(scoreDiff) + 1) * this.kFactor
+      return Math.log(Math.abs(difference) + 1) * this.kFactor
     }
 
     const subtract = () => score - scoringFactor
