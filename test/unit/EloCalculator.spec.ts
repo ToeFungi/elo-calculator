@@ -12,32 +12,38 @@ describe('EloCalculator', () => {
   })
 
   describe('#constructor', () => {
-    it('sets the `shouldRound` option to `true` correctly', () => {
-      const shouldRound = true
-      const eloCalculator = new EloCalculator(shouldRound)
+    const kFactorDefault = 32
+    const shouldRoundDefault = true
 
-      return eloCalculator.shouldRound.should.be.true
+    const kFactorSet = 10
+    const shouldRoundSet = false
+
+    it('defaults both `shouldRound` and `kFactor` when no values are passed', () => {
+      const eloCalculator = new EloCalculator()
+
+      eloCalculator.kFactor.should.deep.equal(kFactorDefault)
+      eloCalculator.shouldRound.should.deep.equal(shouldRoundDefault)
     })
 
-    it('sets the `shouldRound` option to `false` correctly', () => {
-      const shouldRound = false
-      const eloCalculator = new EloCalculator(shouldRound)
+    it('defaults `kFactor` and sets `shouldRound` when `shouldRound` is passed', () => {
+      const eloCalculator = new EloCalculator(shouldRoundSet)
 
-      return eloCalculator.shouldRound.should.be.false
+      eloCalculator.kFactor.should.deep.equal(kFactorDefault)
+      eloCalculator.shouldRound.should.deep.equal(shouldRoundSet)
     })
 
-    it('sets the `kFactor` option correctly', () => {
-      const kFactor = 10
-      const eloCalculator = new EloCalculator(true, kFactor)
+    it('defaults `shouldRound` and sets `kFactor` when `kFactor` is passed', () => {
+      const eloCalculator = new EloCalculator(shouldRoundDefault, kFactorSet)
 
-      return eloCalculator.kFactor.should.deep.equal(kFactor)
+      eloCalculator.kFactor.should.deep.equal(kFactorSet)
+      eloCalculator.shouldRound.should.deep.equal(shouldRoundDefault)
     })
 
-    it('sets the `kFactor` to the default correctly', () => {
-      const kFactor = 32
-      const eloCalculator = new EloCalculator(true)
+    it('sets both `shouldRound` and `kFactor` when both values are passed', () => {
+      const eloCalculator = new EloCalculator(shouldRoundSet, kFactorSet)
 
-      return eloCalculator.kFactor.should.deep.equal(kFactor)
+      eloCalculator.kFactor.should.deep.equal(kFactorSet)
+      eloCalculator.shouldRound.should.deep.equal(shouldRoundSet)
     })
   })
 
