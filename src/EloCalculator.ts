@@ -17,7 +17,7 @@ class EloCalculator {
    * @param {boolean} shouldRound Whether or not the new ELO should be rounded before being returned.
    * @param {number} kFactor The factor the new ELO is calculated against.
    */
-  constructor (shouldRound: boolean = true, kFactor: number = 32) {
+  constructor(shouldRound: boolean = true, kFactor: number = 32) {
     this.kFactor = 32
     this.shouldRound = shouldRound
   }
@@ -31,7 +31,7 @@ class EloCalculator {
    * @param {number} elo An ELO score to be converted to base10.
    * @return {Promise<number>} The equivalent base10 rank of the given ELO.
    */
-  private convertEloToBase10 (elo: number): Promise<number> {
+  private convertEloToBase10(elo: number): Promise<number> {
     const divide = () => elo / 400
     const convertToBase10 = (value: number) => Math.pow(10, value)
 
@@ -50,11 +50,11 @@ class EloCalculator {
    * @param {number} opponentElo The initial ELO of the opponent.
    * @return {Promise<RelativeRank>} An object containing the equivalent base10 value of both player's ELO score.
    */
-  private determineRelativeRank (playerElo: number, opponentElo: number): Promise<RelativeRank> {
+  private determineRelativeRank(playerElo: number, opponentElo: number): Promise<RelativeRank> {
     return Promise.all([
       this.convertEloToBase10(playerElo),
       this.convertEloToBase10(opponentElo)
-    ]).then(([player, opponent]: [number, number]) => ({ player, opponent }))
+    ]).then(([ player, opponent ]: [ number, number ]) => ({ player, opponent }))
   }
 
   /**
@@ -66,7 +66,7 @@ class EloCalculator {
    * @param {number} opponentRank The base10 value of the opponent's ELO score.
    * @return {Promise<number>} The determined scoring factor.
    */
-  private determineScoreFactor (playerRank: number, opponentRank: number): Promise<number> {
+  private determineScoreFactor(playerRank: number, opponentRank: number): Promise<number> {
     const add = () => playerRank + opponentRank
     const divide = (value: number) => playerRank / value
 
@@ -86,7 +86,7 @@ class EloCalculator {
    * @param {number} scoreDiff The difference in the score as a number.
    * @return {Promise<number>} The new calculated ELO.
    */
-  private determineElo (playerElo: number, scoringFactor: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
+  private determineElo(playerElo: number, scoringFactor: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
     const getFactor = (scoreDiff?: number): number => {
       if (!scoreDiff) {
         return this.kFactor
@@ -114,7 +114,7 @@ class EloCalculator {
    * @param {number} elo A value representing the ELO.
    * @return {Promise<number>} The rounded off ELO value.
    */
-  private rounding (elo: number): Promise<number> {
+  private rounding(elo: number): Promise<number> {
     return Promise.resolve()
       .then(() => {
         if (!this.shouldRound) {
@@ -133,7 +133,7 @@ class EloCalculator {
    * @param {number} probability The probability of the `player` to win the game.
    * @return {Promise<Probabilities>} The probability of a win for either player based on the `player` ELO.
    */
-  private createProbability (probability: number): Promise<Probabilities> {
+  private createProbability(probability: number): Promise<Probabilities> {
     return Promise.resolve()
       .then(() => {
         const player = Math.round(probability * 100)
@@ -156,7 +156,7 @@ class EloCalculator {
    * @param {number} scoreDiff The difference in the score as a number.
    * @return {Promise<number>} The new ELO of the player.
    */
-  public calculateElo (playerElo: number, opponentElo: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
+  public calculateElo(playerElo: number, opponentElo: number, score: ScoringBonus, scoreDiff?: number): Promise<number> {
     return Promise.resolve()
       .then(() => this.determineRelativeRank(playerElo, opponentElo))
       .then((relativeRank: RelativeRank) => this.determineScoreFactor(relativeRank.player, relativeRank.opponent))
@@ -171,7 +171,7 @@ class EloCalculator {
    * @param {number} opponentElo The ELO of the opponent.
    * @return {Promise<Probabilities>} The win probability for each player respectively.
    */
-  public caluclateWinProbability (playerElo: number, opponentElo: number): Promise<Probabilities> {
+  public caluclateWinProbability(playerElo: number, opponentElo: number): Promise<Probabilities> {
     const determineDiff = (): number => opponentElo - playerElo
 
     const determineProbability = (elo: number): number => 1 / (1 + elo)

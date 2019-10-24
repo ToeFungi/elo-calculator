@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "preserveConstEnums": true,
-    "sourceMap": true,
     "strict": true,
+    "sourceMap": true,
+    "declaration": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "declaration": true,
+    "preserveConstEnums": true,
     "lib": [
       "es2018"
     ],
