@@ -16,6 +16,7 @@ describe('EloCalculator', () => {
       const shouldRound = true
       const eloCalculator = new EloCalculator(shouldRound)
 
+      eloCalculator.kFactor.should.deep.equal(32)
       return eloCalculator.shouldRound.should.be.true
     })
 
@@ -23,6 +24,7 @@ describe('EloCalculator', () => {
       const shouldRound = false
       const eloCalculator = new EloCalculator(shouldRound)
 
+      eloCalculator.kFactor.should.deep.equal(32)
       return eloCalculator.shouldRound.should.be.false
     })
 
