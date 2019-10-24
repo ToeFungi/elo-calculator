@@ -26,6 +26,16 @@ describe('EloCalculator', () => {
       return eloCalculator.shouldRound.should.be.false
     })
 
+    it('sets both `shouldRound` and `kFactor` to the passed values correctly', () => {
+      const kFactor = 10
+      const shouldRound = false
+
+      const eloCalculator = new EloCalculator(shouldRound, kFactor)
+
+      eloCalculator.kFactor.should.deep.equal(kFactor)
+      return eloCalculator.shouldRound.should.deep.equal(shouldRound)
+    })
+
     it('sets the `kFactor` option correctly', () => {
       const kFactor = 10
       const eloCalculator = new EloCalculator(true, kFactor)
