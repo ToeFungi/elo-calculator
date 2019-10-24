@@ -12,11 +12,18 @@ describe('EloCalculator', () => {
   })
 
   describe('#constructor', () => {
-    it('sets the `shouldRound` option correctly', () => {
+    it('sets the `shouldRound` option to `true` correctly', () => {
       const shouldRound = true
       const eloCalculator = new EloCalculator(shouldRound)
 
       return eloCalculator.shouldRound.should.be.true
+    })
+
+    it('sets the `shouldRound` option to `false` correctly', () => {
+      const shouldRound = false
+      const eloCalculator = new EloCalculator(shouldRound)
+
+      return eloCalculator.shouldRound.should.be.false
     })
 
     it('sets the `kFactor` option correctly', () => {
