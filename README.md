@@ -1,4 +1,10 @@
 # ELO Calculator
+[![Build Status](https://travis-ci.org/ToeFungi/elo-calculator.svg?branch=master)](https://travis-ci.org/ToeFungi/elo-calculator)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=elo-calculator&metric=alert_status)](https://sonarcloud.io/dashboard?id=elo-calculator)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=elo-calculator&metric=bugs)](https://sonarcloud.io/dashboard?id=elo-calculator)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=elo-calculator&metric=code_smells)](https://sonarcloud.io/dashboard?id=elo-calculator)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=elo-calculator&metric=coverage)](https://sonarcloud.io/dashboard?id=elo-calculator)
+
 This package makes using the ELO ranking system easy. To get started you just need to decide what you want your starting 
 ELO. After that, you can start calculating win probabilities based on two player's ELO scores and also determining the
 ELO of a player after a match.

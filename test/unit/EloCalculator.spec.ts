@@ -11,6 +11,22 @@ describe('EloCalculator', () => {
     eloCalculator = new EloCalculator(shouldRound)
   })
 
+  describe('#constructor', () => {
+    it('sets the `shouldRound` option correctly', () => {
+      const shouldRound = true
+      const eloCalculator = new EloCalculator(shouldRound)
+
+      return eloCalculator.shouldRound.should.be.true
+    })
+
+    it('sets the `kFactor` option correctly', () => {
+      const kFactor = 10
+      const eloCalculator = new EloCalculator(true, kFactor)
+
+      return eloCalculator.kFactor.should.deep.equal(kFactor)
+    })
+  })
+
   describe('#calculateElo', () => {
     describe('win', () => {
       it('returns a specific ELO which is higher after a win', () => {
