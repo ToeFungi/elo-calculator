@@ -1,15 +1,24 @@
 {
   "name": "toefungi-elo-calculator",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A package to do all necessary computations to determine ELO rankings",
-  "main": "index.ts",
+  "main": "dist/index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "mocha",
-    "coverage": "nyc --reporter=lcov mocha"
+    "coverage": "nyc --reporter=lcov mocha",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
   "keywords": [
     "ELO",
-    "Ranking"
+    "Ranks",
+    "Ranking",
+    "Promises",
+    "Packages",
+    "TypeScript",
+    "Competitive",
+    "Calculations"
   ],
   "author": "Alex Pickering",
   "license": "MIT",
