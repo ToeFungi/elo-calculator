@@ -19,14 +19,14 @@ To install this package.
 ### Usage
 You're first going to want to import the relevant files and instantiate a new instance of the `EloCalculator`.
 ```typescript
-import { EloCalculator } from '..'
+import { EloCalculator } from 'toefungi-elo-calculator'
 
 const eloCalculator: EloCalculator = new EloCalculator()
 ```
 
 Here is a basic example of calculating a new ELO value.
 ```typescript
-import { ScoringBonus } from '..'
+import { ScoringBonus } from 'toefungi-elo-calculator'
 
 // Declared player variables
 const playerElo = 2149
@@ -53,7 +53,7 @@ eloCalculator.calculateElo(playerElo, opponentElo, ScoringBonus.WIN, scoreDiff)
 
 Here is a basic example of calculating win probabilities between two players.
 ```typescript
-import { Probabilities } from '..'
+import { Probabilities } from 'toefungi-elo-calculator'
 
 // Declared player variables
 const playerElo = 2149
