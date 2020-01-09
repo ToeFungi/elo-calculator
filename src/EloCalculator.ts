@@ -146,7 +146,6 @@ class EloCalculator {
       })
   }
 
-
   /**
    * Calculate the ELO of a player after a match based on their opponent's ELO and whether or not the player won the game.
    *

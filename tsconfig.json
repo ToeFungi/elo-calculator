@@ -3,6 +3,7 @@
     "strict": true,
     "sourceMap": true,
     "declaration": true,
+    "declarationMap": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "preserveConstEnums": true,
@@ -17,11 +18,11 @@
     ]
   },
   "include": [
-    "src/**/*",
-    "types/**/*"
+    "src",
+    "types"
   ],
   "exclude": [
     "node_modules",
-    "test/**/*.spec.ts"
+    "test"
   ]
 }
